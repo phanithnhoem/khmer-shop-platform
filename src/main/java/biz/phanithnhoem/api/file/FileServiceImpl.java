@@ -23,7 +23,6 @@ import java.util.stream.Stream;
 @Service
 public class FileServiceImpl implements FileService {
 
-
     @Value("${file.base-uri}")
     private String fileBaseUri;
     @Value("${file.server-path}")
@@ -33,6 +32,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public FileDto findByName(String name) throws IOException {
+
         Path path = Paths.get(serverPath + name);
         if (Files.exists(path)){
             Resource resource = UrlResource.from(path.toUri());
@@ -49,11 +49,14 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public List<FileDto> findAll() {
+
         Path path = Paths.get(serverPath);
         List<FileDto> fileDtoList = new ArrayList<>();
+
         try {
             Stream<Path> paths = Files.list(path);
             List<Path> pathList = paths.toList();
+
             for ( Path p: pathList) {
                 Resource resource = UrlResource.from(p.toUri());
                 fileDtoList.add(FileDto.builder()
@@ -85,6 +88,7 @@ public class FileServiceImpl implements FileService {
     public FileDto uploadSingle(MultipartFile file){
         return this.save(file);
     }
+
     @Override
     public List<FileDto> uploadMultiple(List<MultipartFile> files) {
         return files.stream().map(this::save).collect(Collectors.toList());
@@ -116,5 +120,4 @@ public class FileServiceImpl implements FileService {
         int lastDotIndex = name.lastIndexOf(".");
         return name.substring(lastDotIndex + 1);
     }
-
 }

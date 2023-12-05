@@ -1,5 +1,7 @@
 package biz.phanithnhoem.api.user;
 
+import biz.phanithnhoem.api.cart.Cart;
+import biz.phanithnhoem.api.review.Review;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,15 +33,20 @@ public class User {
     @Column(length = 10)
     private Boolean isVerified;
     private Boolean isDeleted;
-    @CreatedDate
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
-    @LastModifiedDate
     private Instant updatedAt;
+
+    @OneToOne(mappedBy = "user")
+    private Cart cart;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
         joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
     private Set<Role> roles;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    Set<Review> reviews;
 }

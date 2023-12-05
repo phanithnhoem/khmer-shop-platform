@@ -58,7 +58,6 @@ public class FileController {
     @PostMapping(value = "/single", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<Object> uploadSingle(@RequestPart("file") @Valid MultipartFile file) {
-        System.out.println(file);
         FileDto fileDto = fileService.uploadSingle(file);
         return ApiResponse.builder()
                 .status("Success")

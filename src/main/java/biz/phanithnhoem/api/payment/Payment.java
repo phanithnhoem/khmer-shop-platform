@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,7 +18,7 @@ public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private LocalDateTime paymentDate;
+    private Instant paymentDate;
     private String paymentMethod;
     private Double amount;
     private String status;

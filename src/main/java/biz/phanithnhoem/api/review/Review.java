@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,16 +16,19 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class Review {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Double rating;
+    private int rating;
     @Column(columnDefinition = "TEXT")
     private String comment;
-    private LocalDateTime reviewedDate;
+    private Instant reviewedDate;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;

@@ -18,8 +18,8 @@ public class CartItem {
     private Integer qty;
     private Double unitPrice;
     private Double discountAmount;
-    private String color;
-    private String size;
+//    private String color;
+//    private String size;
     private Double subTotal;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cart_id", referencedColumnName = "id")

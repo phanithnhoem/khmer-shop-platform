@@ -3,7 +3,6 @@ package biz.phanithnhoem.base;
 import lombok.Builder;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Builder
 public record ApiResponse<T>(String status,

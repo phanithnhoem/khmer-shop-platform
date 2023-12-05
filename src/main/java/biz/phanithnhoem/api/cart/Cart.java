@@ -8,7 +8,10 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "carts")
@@ -24,10 +27,12 @@ public class Cart {
     private String status;
     private Boolean isCheckedOut;
     @CreatedDate
-    private LocalDateTime createdAt;
+    private Instant createdAt;
     @LastModifiedDate
-    private LocalDateTime updatedAt;
-    @ManyToOne(fetch = FetchType.EAGER)
+    private Instant updatedAt;
+    @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    private List<CartItem> cartItems = new ArrayList<>();
 }

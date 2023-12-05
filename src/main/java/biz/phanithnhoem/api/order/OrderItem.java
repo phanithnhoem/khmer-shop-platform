@@ -2,15 +2,15 @@ package biz.phanithnhoem.api.order;
 
 import biz.phanithnhoem.api.product.Product;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "orders_items")
 @Getter
 @Setter
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,9 +19,11 @@ public class OrderItem {
     private Integer qty;
     private Boolean isDiscountApplied;
     private Double subTotal;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private Order order;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;

@@ -6,6 +6,7 @@ import lombok.Builder;
 public record UpdateShopDto(
         String name,
         String description,
+        String location,
         String email,
         String phone) {
 }

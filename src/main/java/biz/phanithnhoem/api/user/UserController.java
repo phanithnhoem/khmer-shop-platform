@@ -1,6 +1,7 @@
 package biz.phanithnhoem.api.user;
 
 import biz.phanithnhoem.api.user.web.CreateUserDto;
+import biz.phanithnhoem.api.user.web.UpdateUserDto;
 import biz.phanithnhoem.api.user.web.UserDto;
 import biz.phanithnhoem.base.ApiPagedResponse;
 import biz.phanithnhoem.base.ApiResponse;
@@ -22,11 +23,42 @@ public class UserController {
 
     private final UserService userService;
 
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/{uuid}")
+    public ApiResponse<Object> updateByUuid(@PathVariable String uuid,
+                                            @RequestBody UpdateUserDto updateUserDto){
+
+        userService.updateByUuid(uuid, updateUserDto);
+        return ApiResponse.builder()
+                .status("Success")
+                .code(HttpStatus.OK.value())
+                .message("User has been update successfully.")
+                .data(updateUserDto)
+                .timestamp(Instant.now())
+                .build();
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/{uuid}")
+    public ApiResponse<Object> findByUuid(@PathVariable String uuid){
+
+        UserDto userDto = userService.findByUuid(uuid);
+        return ApiResponse.builder()
+                .status("Success")
+                .code(HttpStatus.OK.value())
+                .message(String.format("User with UUID: %s has been found.", uuid))
+                .data(userDto)
+                .timestamp(Instant.now())
+                .build();
+    }
+
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/search")
-    public ApiResponse<Object> searchUsers(@RequestParam(required = false) String fullName,
-                                           @RequestParam(required = false) String username,
-                                           @RequestParam(required = false) String email){
-        List<UserDto> userDtoList = userService.searchUsers(fullName, username, email);
+    public ApiResponse<Object> dynamicSearchUser(@RequestParam(required = false) String fullName,
+                                                 @RequestParam(required = false) String username,
+                                                 @RequestParam(required = false) String email){
+
+        List<UserDto> userDtoList = userService.dynamicSearchUser(fullName, username, email);
         return ApiResponse.builder()
                 .status("Success")
                 .code(HttpStatus.OK.value())
@@ -36,9 +68,11 @@ public class UserController {
                 .build();
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping
     public ApiPagedResponse<Object> findAllWithPagination(@RequestParam(defaultValue = "0") int page,
-                                                          @RequestParam(defaultValue = "8") int size){
+                                                          @RequestParam(defaultValue = "8") int size) {
+
         Pageable pageable = PageRequest.of(page, size, Sort.by("username"));
         List<UserDto> userDtoList = userService.findAllWithPagination(pageable);
 
@@ -48,16 +82,17 @@ public class UserController {
                 .code(HttpStatus.OK.value())
                 .data(userDtoList)
                 .pageNo(pageable.getPageNumber())
-                .recordCount(userDtoList.size())
+                .recordCount(pageable.getPageSize())
                 .totalRecords(userService.getTotalUserCount())
-                .totalPages(userService.getTotalUserCount()/pageable.getPageSize() + 1)
+                .totalPages((long) Math.ceil(userService.getTotalUserCount()/pageable.getPageSize()))
                 .timestamp(Instant.now())
                 .build();
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public ApiResponse<Object> createNewUser(@Valid @RequestBody CreateUserDto createUserDto){
-        System.out.println(createUserDto);
+
         userService.createNewUser(createUserDto);
         return ApiResponse.builder()
                 .status("Success")
@@ -67,5 +102,4 @@ public class UserController {
                 .timestamp(Instant.now())
                 .build();
     }
-
 }

@@ -10,6 +10,7 @@ public record CreateShopDto(
         @NotBlank
         String name,
         String description,
+        @NotBlank
         String location,
         @NotBlank
         String email,
